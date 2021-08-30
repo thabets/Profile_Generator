@@ -2,16 +2,15 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 //const generateHTML = require("./utils/generateHTML");
 //const bootstrap = require("bootstrap");
-const TeamMembers = require("./Classes/TeamMembers");
+const Engineer = require("./Classes/Engineer");
 const Managers = require("./Classes/Manager");
+const Intern = require("./Classes/Intern");
 
-//Questions for the user to add information
-const teamInfo = []; //Array to add information to
-const employee = [];
+//Array for information to be stored
 const engineer = [];
 const managerInfo = [];
 const intern = [];
-
+//Questions for the user to add information
 function Manager() {
   inquirer
     .prompt([
@@ -93,13 +92,14 @@ function team() {
       },
       {
         type: "input",
-        message: "What school are they enrolled in?",
+        message:
+          "What school are they enrolled in? (Please leave empty if N/A)",
         name: "school",
       },
     ])
     .then((dateam) => {
-      if (dateam.usertype == "Engineer") {
-        const teamMember = new TeamMembers(
+      if (dateam.usertype === "Engineer") {
+        const teamMember = new Engineer(
           dateam.usertype,
           dateam.username,
           dateam.employeeID,
@@ -110,7 +110,7 @@ function team() {
         engineer.push(teamMember);
         another();
       } else {
-        const teamMember = new TeamMembers(
+        const teamMember = new Intern(
           dateam.usertype,
           dateam.username,
           dateam.employeeID,
@@ -144,7 +144,7 @@ function another() {
 function info() {
   console.log(managerInfo);
   console.log(engineer);
-  console.log();
+  console.log(intern);
 }
 //Generating the HTML File and putting it in the output folder for the user
 // function writeToFile(data){
