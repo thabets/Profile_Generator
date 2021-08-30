@@ -2,11 +2,17 @@ const inquirer = require("inquirer");
 const fs = require("fs");
 //const generateHTML = require("./utils/generateHTML");
 //const bootstrap = require("bootstrap");
-const TeamMembers = require("./TeamMembers");
+const TeamMembers = require("./Classes/TeamMembers");
+const Managers = require("./Classes/Manager");
 
 //Questions for the user to add information
 const teamInfo = []; //Array to add information to
-function team() {
+const employee = [];
+const engineer = [];
+const managerInfo = [];
+const intern = [];
+
+function Manager() {
   inquirer
     .prompt([
       {
@@ -14,6 +20,50 @@ function team() {
         Message: "Please pick the type of user",
         name: "usertype",
         choices: ["Manager", "Employee", "Intern"],
+      },
+      {
+        type: "input",
+        message: "What is your name?",
+        name: "username",
+      },
+      {
+        type: "input",
+        message: "What is your employee ID?",
+        name: "employeeID",
+      },
+      {
+        type: "input",
+        message: "What is your email?",
+        name: "email",
+      },
+
+      {
+        type: "input",
+        message: "What is your office number?",
+        name: "office",
+      },
+    ])
+    //adding team members to the array
+    .then((damanager) => {
+      const teamMember = new Managers(
+        damanager.usertype,
+        damanager.username,
+        damanager.employeeID,
+        damanager.email,
+        damanager.office
+      );
+      managerInfo.push(teamMember);
+      another();
+    });
+}
+function team() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        Message: "Please pick the type of user",
+        name: "usertype",
+        choices: ["Engineer", "Intern"],
       },
       {
         type: "input",
@@ -36,22 +86,44 @@ function team() {
         message: "What is the associated office number?",
         name: "office",
       },
+      {
+        type: "input",
+        message: "What is their github?",
+        name: "github",
+      },
+      {
+        type: "input",
+        message: "What school are they enrolled in?",
+        name: "school",
+      },
     ])
-    //adding team members to the array
     .then((dateam) => {
-      console.log(dateam);
-      const teamMember = new TeamMembers(
-        dateam.usertype,
-        dateam.username,
-        dateam.employeeID,
-        dateam.email,
-        dateam.office
-      );
-      teamInfo.push(teamMember);
-
-      another();
+      if (dateam.usertype == "Engineer") {
+        const teamMember = new TeamMembers(
+          dateam.usertype,
+          dateam.username,
+          dateam.employeeID,
+          dateam.email,
+          dateam.office,
+          dateam.github
+        );
+        engineer.push(teamMember);
+        another();
+      } else {
+        const teamMember = new TeamMembers(
+          dateam.usertype,
+          dateam.username,
+          dateam.employeeID,
+          dateam.email,
+          dateam.office,
+          dateam.school
+        );
+        intern.push(teamMember);
+        another();
+      }
     });
 }
+
 //ask user if they would like to add another team member
 function another() {
   inquirer
@@ -64,16 +136,21 @@ function another() {
       if (answer.another) {
         team();
       } else {
-        writeToFile(data);
+        info();
       }
     });
 }
-
+//display the team members info
+function info() {
+  console.log(managerInfo);
+  console.log(engineer);
+  console.log();
+}
 //Generating the HTML File and putting it in the output folder for the user
 // function writeToFile(data){
 //   fs.writeFileSync("./output/index.html",generateHTML(data),"utf8");
 //   console.log('done');
-// }
+// };
 
 // function init() {
 //   inquirer
@@ -83,6 +160,5 @@ function another() {
 //     });
 //     }
 
-// //Function call to initialize app
-// init();
-team();
+//Function call to Start app
+Manager();
